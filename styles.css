@@ -1,46 +1,62 @@
 #context {
-text-align:right;
-display:inline;
-	}
+    text-align:right;
+    display:inline;
+}
 
 .ic { 
-display:inline;
+    display:inline;
 }
-.ynlabel {
-	text-align:right;
-	font-weight:bold;
-	font-size:9px;
-	padding-right:3px;
-}
+
 .setleft {
     text-align:left;
-    border-bottom:1px #eeeeee dotted;
-	margin-bottom:3px;
-	font-size:11px;
-	float:left;
-	width:70%;
+    margin-bottom:3px;
+    float:left;
+    width:70%;
 }
 
 .setright {
-	text-align:right;
-	float:right;
-	width:30%;
+    text-align:right;
+    float:right;
+    width:30%;
 }
 
-.toplevel {
-    z-index = 1500;
+.clearfix {
+    clear: both;
 }
+
+#context label {
+    display: inline-block;
+    width: 45%;
+    text-align: center;
+    font-weight: bold;
+}
+
+.submit .button {
+    margin: .5em auto;
+    display: block;
+}
+
+#sections {
+    /* Hack to get the embedded span to vertically align correctly*/
+    line-height: 30px;      
+}
+
+.valign {
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .blue {
-color: #0000ff;
+    color: #0000ff;
 }
 
 .red {
-color: #ff0000;
+    color: #ff0000;
 
 }
 
 .green {
-color: #00ff00;
+    color: #00ff00;
 }
 .row {
 
@@ -49,16 +65,15 @@ color: #00ff00;
     margin-bottom:5px;
 }
 .small {
-	font-size:9px;
-	color:#333333;
+    font-size:9px;
+    color:#333333;
 }
 .button {
-	margin: 0,auto;
-	text-align:center;
-	margin-top:5px;
-	padding:3px;
-	font-size:10px;
-	background:#666;
-	color:#ffffff;
-	border:1px #ffffff solid;
-	}
+    margin: 0 auto;
+    text-align:center;
+    margin-top:5px;
+    padding:3px;
+    background:#666;
+    color:#ffffff;
+    border:1px #ffffff solid;
+}
