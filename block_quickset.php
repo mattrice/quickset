@@ -89,11 +89,13 @@ class block_quickset extends block_base {
 
             $format = course_get_format($COURSE);
             $format_options = $format->get_format_options();
-            $this->content->text =
-                    '<form action="' . $CFG->wwwroot . '/blocks/quickset/processform.php" method="post">'
-                    . '<input type="hidden" value="' . $COURSE->id . '" name="courseid" />'
-                    . '<input type="hidden" value="' . sesskey() . '" name="sesskey" />'
-                    . '<input type="hidden" value="grader" name="report"/>';
+            $sessionkey = sesskey();
+            $this->content->text = <<<EOD
+<form action="{$CFG->wwwroot}/blocks/quickset/processform.php" method="post">
+<input type="hidden" value="{$COURSE->id}" name="courseid" />
+<input type="hidden" value="{$sessionkey}" name="sesskey" />
+<input type="hidden" value="grader" name="report"/>
+EOD;
 
             //Get localized strings for output
             $strings = array(
@@ -104,13 +106,14 @@ class block_quickset extends block_base {
                 'sectionsvisible' => get_string('sectionsvisible', 'block_quickset'),
                 'updatesettings' => get_string('updatesettings', 'block_quickset'),
                 'moresettings' => get_string('moresettings', 'block_quickset'),
-                'note' => get_string('note', 'block_quickset')
+                'note' => get_string('note', 'block_quickset'),
+                'editsections' => get_string('editsections', 'block_quickset')
             );
-
+            
             $this->content->text .= <<<EOD
     <div id="context">
         <div class="setright">
-            <label>{$strings['yes']}</label>|<label>{$strings['no']}</label>
+            <div class="heading">{$strings['yes']}</div>|<div class="heading">{$strings['no']}</div>
         </div>
         <div class="clearfix"></div>
         <div class="setleft {$students}">{$strings['classvisible']}</div>
@@ -166,15 +169,26 @@ EOD;
                         . '</div>';
             }
 
+            //Construct moodle_url with hidden params (so that I don't need to use a form and POST data; I can use a regular link instead)
+            $editurl = new moodle_url(
+                            $CFG->wwwroot . '/blocks/quickset/edit.php', 
+                            array(
+                                'courseid' => $COURSE->id, 
+                                'sesskey' => $sessionkey,
+                                'pageurl' => $CFG->wwwroot .'/course/view.php?id=' . $COURSE->id
+                                )
+                        );
+            
             $this->content->text .= <<<EOD
         <div class="submit clearfix">
         <div class="center">
             <input type="submit" value="{$strings['updatesettings']}"/ class="button"></div>
+        </div></form>
+        <div class="setleft" style="width:100%;">
+            <a href="{$CFG->wwwroot}/course/edit.php?id={$COURSE->id}">{$strings['moresettings']}</a><br />
+            <a href="{$editurl}">{$strings['editsections']}</a>
         </div>
-        <div class="setleft">
-            <a href="{$CFG->wwwroot}/course/edit.php?id={$COURSE->id}">{$strings['moresettings']}</a>
-        </div>
-    </div></form>
+    </div>
         <div class="small setleft">{$strings['note']}</div>
         <div class="clearfix"></div>
 EOD;

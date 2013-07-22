@@ -1,17 +1,35 @@
 <?PHP
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-// $Id$ 
-// block_quickset.php - created by Bob Puffer CLAMP, Luther College
+// This is block_quickset.php - created by Bob Puffer CLAMP, Luther College
 
 
 $string['pluginname'] = 'Quickset';
 $string['classvisible'] = 'Course visible to students?';
-$string['ajaxenabled'] = 'AJAX enabled?';
 $string['gradesvisible'] = 'Grades visible to students?';
 $string['sectionsvisible'] = '# of Visible Sections';
 $string['updatesettings'] = 'Update settings';
-$string['moresettings']='&raquo; More Settings';
+$string['moresettings']='&raquo; Course Settings';
 $string['note'] = 'Note: This block invisible to students';
 $string['yes'] = 'Yes';
 $string['no'] = 'No';
-?>
+$string['editsections'] = '&raquo; Edit Sections';
+$string['addnewsectionsafterselected'] = 'Add new course section after selected';
+$string['reordersections'] = 'Reorder and/or submit section changes';
+$string['removeselected'] = 'Remove selected';
+$string['areyousureremoveselected'] = 'All resources and modules will be moved to the top (0) section.  Summary information will be discarded';
+$string['editingcoursesections'] = 'Editing sections for course: {$a}';
+$string['returntocourse'] = 'Return to course, discard unsaved changes';
