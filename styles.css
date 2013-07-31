@@ -58,18 +58,6 @@ div.heading:hover{
     vertical-align: middle;
 }
 
-.blue {
-    color: #0000ff;
-}
-
-.red {
-    color: #ff0000;
-
-}
-
-.green {
-    color: #00ff00;
-}
 .row {
 
 }
@@ -85,7 +73,30 @@ div.heading:hover{
     text-align:center;
     margin-top:5px;
     padding:3px;
-    background:#666;
-    color:#ffffff;
-    border:1px #ffffff solid;
+}
+
+#sections label {
+    display: inline-block;
+}
+
+.ordinal {
+    width: 5%;
+    text-align: right;
+    vertical-align: middle;
+    padding: 4px 6px;
+    margin-bottom: 10px;
+}
+
+.ordinal input[type="checkbox"] {
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+.sorder input[type="text"] {
+    width: 5%;
+    text-align: right;
+}
+
+.singlesection input[type="text"] {
+    width: 50%;
 }

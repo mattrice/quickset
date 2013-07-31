@@ -24,16 +24,16 @@
  */
 
 class block_quickset extends block_base {
-
     /**
      * The option chosen to allow students access.
      */
+
     const AVAILABLE = 1;
     /**
      * The option chose to deny students access.
      */
     const UNAVAILABLE = 0;
-    
+
     function init() {
         $this->title = get_string('pluginname', 'block_quickset');
         $this->cron = 1;
@@ -67,22 +67,22 @@ class block_quickset extends block_base {
         $this->content = new stdClass;
 
         $context = get_context_instance(CONTEXT_COURSE, $COURSE->id);
+        $students = '';
+        $grades = '';
         if (has_capability('moodle/course:update', $context)) {
             if ($COURSE->visible == 1) {
-                $students = 'green';
                 $studentschecked = ' checked="checked"';
                 $studentsunchecked = '';
             } else {
-                $students = 'red';
+                $students = 'dimmed_text';
                 $studentsunchecked = ' checked="checked"';
                 $studentschecked = '';
             }
             if ($COURSE->showgrades == 1) {
-                $grades = 'green';
                 $gradeschecked = ' checked="checked"';
                 $gradesunchecked = '';
             } else {
-                $grades = 'red';
+                $grades = 'dimmed_text';
                 $gradesunchecked = ' checked="checked"';
                 $gradeschecked = '';
             }
@@ -109,7 +109,7 @@ EOD;
                 'note' => get_string('note', 'block_quickset'),
                 'editsections' => get_string('editsections', 'block_quickset')
             );
-            
+
             $this->content->text .= <<<EOD
     <div id="context">
         <div class="setright">
@@ -140,7 +140,7 @@ EOD;
             if ($format->uses_sections()) {
                 $this->content->text .= <<<EOD
 
-        <div class="setleft blue" id="sections"><span class="valign">{$strings['sectionsvisible']}</span></div>
+        <div class="setleft" id="sections"><span class="valign">{$strings['sectionsvisible']}</span></div>
 EOD;
 
                 $this->content->text .=
@@ -169,25 +169,43 @@ EOD;
                         . '</div>';
             }
 
-            //Construct moodle_url with hidden params (so that I don't need to use a form and POST data; I can use a regular link instead)
-            $editurl = new moodle_url(
-                            $CFG->wwwroot . '/blocks/quickset/edit.php', 
-                            array(
-                                'courseid' => $COURSE->id, 
-                                'sesskey' => $sessionkey,
-                                'pageurl' => $CFG->wwwroot .'/course/view.php?id=' . $COURSE->id
-                                )
-                        );
-            
             $this->content->text .= <<<EOD
         <div class="submit clearfix">
         <div class="center">
             <input type="submit" value="{$strings['updatesettings']}"/ class="button"></div>
         </div></form>
+EOD;
+            $this->content->text .= <<<EOD
         <div class="setleft" style="width:100%;">
             <a href="{$CFG->wwwroot}/course/edit.php?id={$COURSE->id}">{$strings['moresettings']}</a><br />
-            <a href="{$editurl}">{$strings['editsections']}</a>
-        </div>
+EOD;
+
+            /*
+             * Not yet ready for release - remove the link from the UI
+            //If this course format doesn't use sections, don't bother outputting the link to edit the sections
+            if ($format->uses_sections()) {
+                
+            //Construct moodle_url with hidden params (so that I don't need to use a form and POST data; I can use a regular link instead)
+            $editurl = new moodle_url(
+                    $CFG->wwwroot . '/blocks/quickset/edit.php', array(
+                'courseid' => $COURSE->id,
+                'sesskey' => $sessionkey,
+                'pageurl' => $CFG->wwwroot . '/course/view.php?id=' . $COURSE->id
+                    )
+            );
+                # Link to the Edit sections tool (can be inserted after the More settings link)
+                $this->content->text .=<<<EOD
+                        <a href="{$editurl}">{$strings['editsections']}</a>
+EOD;
+            }
+             * 
+             * 
+             */
+            
+            //Close div tag opened above Course Settings link
+            $this->content->text .= "        </div>";
+
+            $this->content->text .= <<<EOD
     </div>
         <div class="small setleft">{$strings['note']}</div>
         <div class="clearfix"></div>

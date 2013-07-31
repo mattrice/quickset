@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once('../../config.php');
+require_once(dirname(__FILE__) . '/../../config.php');
 global $COURSE, $PAGE, $OUTPUT;
 
 $courseid = required_param('courseid', PARAM_NUMBER);
@@ -32,15 +32,13 @@ if (!$course) {
     print_error('invalidcourseid', 'error');
 }
 // Log this visit.
-add_to_log($courseid, 'block_quickset', 'editsections',
-            "edit.php");
+add_to_log($courseid, 'block_quickset', 'editsections', "edit.php");
 
 // You need mod/section:manage in addition to section capabilities to access this page.
 $context = get_context_instance(CONTEXT_COURSE, $COURSE->id);
 require_capability('moodle/course:update', $context);
 
 // Process commands ============================================================
-
 // Get the list of section ids had their check-boxes ticked.
 $selectedsectionids = array();
 $params = (array) data_submitted();
@@ -55,7 +53,7 @@ if (optional_param('returntocourse', null, PARAM_TEXT)) {
 }
 
 if (optional_param('updatesettings', null, PARAM_TEXT)) {
-    require_once(processform.php);
+    require_once(processform . php);
     process_form($courseid, $params);
     rebuild_course_cache($courseid, true);
     redirect("$CFG->wwwroot/course/view.php?id=$courseid");
@@ -66,16 +64,16 @@ if (optional_param('addnewsectionafterselected', null, PARAM_CLEAN) &&
     $sections = array(); // For sections in the new order.
     foreach ($selectedsectionids as $sectionid) {
         // Clone the previous sectionid
-        $newsection = $DB->get_record('course_sections', array('id'=>$sectionid));
+        $newsection = $DB->get_record('course_sections', array('id' => $sectionid));
         $newsection->name = null;
         $newsection->summary = '';
         $newsection->sequence = '';
-        $newsection->section = $params['o'.$sectionid] * 100;
+        $newsection->section = $params['o' . $sectionid] * 100;
         unset($newsection->id);
         $newsection->id = $DB->insert_record('course_sections', $newsection, true);
 
         // Get the present order of the selected sectionid and insert newsection into the param array
-        $params['o'.$newsection->id] = $params['o'.$sectionid] + 1;
+        $params['o' . $newsection->id] = $params['o' . $sectionid] + 1;
     }
     foreach ($params as $key => $value) {
         if (preg_match('!^o(pg)?([0-9]+)$!', $key, $matches)) {
@@ -93,8 +91,8 @@ if (optional_param('addnewsectionafterselected', null, PARAM_CLEAN) &&
         ksort($sections);
         $counter = 0;
         foreach ($sections as $rank => $sectionid) {
-               $counter++;
-               $DB->set_field('course_sections', 'section', $counter * 100, array('course' => $courseid, 'id' => $sectionid));
+            $counter++;
+            $DB->set_field('course_sections', 'section', $counter * 100, array('course' => $courseid, 'id' => $sectionid));
         }
         $sql = "UPDATE mdl_course_sections set section = section / 100
                        WHERE course = '$courseid'
@@ -116,14 +114,14 @@ if (optional_param('addnewsectionafterselected', null, PARAM_CLEAN) &&
 
 if (optional_param('sectiondeleteselected', false, PARAM_BOOL) &&
         !empty($selectedsectionids) && confirm_sesskey()) {
-    $zerosection = $DB->get_record('course_sections', array('section'=>0, 'course' => $courseid));
+    $zerosection = $DB->get_record('course_sections', array('section' => 0, 'course' => $courseid));
     foreach ($selectedsectionids as $sectionid) {
-        $section = $DB->get_record('course_sections', array('id' =>$sectionid));
+        $section = $DB->get_record('course_sections', array('id' => $sectionid));
         if ($section->sequence != '') {
             $zerosection->sequence .= ',' . $section->sequence;
             $DB->update_record('course_sections', $zerosection);
         }
-        $DB->delete_records('course_sections', array('id' =>$sectionid));
+        $DB->delete_records('course_sections', array('id' => $sectionid));
     }
     $sql = "SELECT * FROM mdl_course_sections
             WHERE course = $courseid
@@ -179,10 +177,10 @@ if (optional_param('savechanges', false, PARAM_BOOL) && confirm_sesskey()) {
             $counter++;
             $DB->set_field('course_sections', 'section', $counter * 100, array('course' => $courseid, 'id' => $sectionid));
         }
-           $sql = "UPDATE mdl_course_sections set section = section / 100
+        $sql = "UPDATE mdl_course_sections set section = section / 100
                    WHERE course = '$courseid'
                    AND section <> 0";
-           $DB->execute($sql);
+        $DB->execute($sql);
     }
     // If ordering info was given, reorder the sections.
     if ($sectionnames) {
@@ -200,14 +198,17 @@ if (optional_param('savechanges', false, PARAM_BOOL) && confirm_sesskey()) {
 $PAGE->set_pagelayout('coursecategory');
 $PAGE->set_title(get_string('editingcoursesections', 'block_quickset', format_string($course->shortname)));
 $PAGE->set_heading($course->fullname);
-$node = $PAGE->settingsnav->find('mod_quiz_edit', navigation_node::TYPE_SETTING);
- echo $OUTPUT->header();
 
-$sections = $DB->get_records('course_sections', array('course' =>$courseid));
+#Make sure CSS gets loaded for this page
+$PAGE->requires->css('/blocks/quickset/styles.css');
+
+$node = $PAGE->settingsnav->find('mod_quiz_edit', navigation_node::TYPE_SETTING);
+echo $OUTPUT->header();
+
+$sections = $DB->get_records('course_sections', array('course' => $courseid));
 section_print_section_list($sections, $thispageurl, $courseid);
 
 echo $OUTPUT->footer();
-
 
 /**
  * Prints a list of sections for the edit.php main view for edit
@@ -239,7 +240,7 @@ function section_print_section_list($sections, $thispageurl, $courseid) {
     }
 
     $lastindex = count($order) - 1;
-
+    //$courseinfo = get_fast_modinfo($courseid);
     $reordercontrolssetdefaultsubmit = '<span class="nodisplay">' .
             '<input type="submit" name="savechanges" value="' .
             $strreordersections . '" /></span>';
@@ -267,7 +268,7 @@ function section_print_section_list($sections, $thispageurl, $courseid) {
 
     $reordercontrolstop = '<div class="reordercontrols">' .
             $reordercontrolssetdefaultsubmit .
-            $reordercontrols1 . $reordercontrols3 . $reordercontrols2top . "</div><br />";
+            $reordercontrols3 . $reordercontrols2top . "</div><br />";
     $reordercontrolsbottom = '<br /><br /><div class="reordercontrols">' .
             $reordercontrolssetdefaultsubmit .
             $reordercontrols4 . $reordercontrols2bottom . "</div>";
@@ -294,46 +295,39 @@ function section_print_section_list($sections, $thispageurl, $courseid) {
         if ($sectnum != 0) {
             $section = $sections[$sectnum];
             $sectionparams = array();
-            $sectionurl = new moodle_url('/section/section.php',
-                    $sectionparams);
+            $sectionurl = new moodle_url('/section/section.php', $sectionparams);
 
-                // This is an actual section.
-                ?>
-                <div class="section">
-                    <span class="sectioncontainer">
-                        <span class="sectnum">
+            // This is an actual section.
+            ?>
+            <div class="section">
+                <span class="sectioncontainer">
+                    <span class="sectnum">
+                        <?php
+                        echo '<label for="s' . $section->id . '" class="ordinal">' . $sno 
+                                . '<input type="checkbox" name="s' . $section->id .'" id="s' . $section->id . '" />'
+                            . '</label>';
+                        ?>
+                    </span>
+                    <span class="content">
+                        <span class="sectioncontentcontainer">
                             <?php
-                            $reordercheckbox = '';
-                            $reordercheckboxlabel = '';
-                            $reordercheckboxlabelclose = '';
-                            $reordercheckbox = '<input type="checkbox" name="s' . $section->id .
-                                '" id="s' . $section->id . '" />';
-                            $reordercheckboxlabel = '<label for="s' . $section->id . '">';
-                            $reordercheckboxlabelclose = '</label>';
-                            echo $reordercheckboxlabel . $sno . $reordercheckboxlabelclose .
-                                    $reordercheckbox;
-
+                            print_section_reordertool($section, $lastindex, $sno);
                             ?>
                         </span>
-                        <span class="content">
-                            <span class="sectioncontentcontainer">
-                                <?php
-                                    print_section_reordertool($section, $lastindex, $sno);
-                                ?>
-                            </span>
-                            <span class="sorder">
-                                <?php
-                                echo '<input type="text" name="o' . $section->id .
-                                        '" size="2" value="' . (10*$count) .
-                                        '" tabindex="' . ($lastindex + $sno) . '" />';
-                                ?>
-                            </span>
+                        <span class="sorder">
+                            <?php
+                            echo '<input type="text" name="o' . $section->id .
+                            '" size="2" value="' . (10 * $count) .
+                            '" tabindex="' . ($lastindex + $sno) . '" />';
+                            ?>
                         </span>
+                    </span>
                 </span>
             </div>
             <?php
         }
     }
+    echo $reordercontrols1;
     echo $reordercontrolsbottom;
     echo '</div></form></div>';
 }
@@ -348,9 +342,9 @@ function section_print_section_list($sections, $thispageurl, $courseid) {
  */
 function print_section_reordertool($section, $lastindex, $sno) {
     echo '<span class="singlesection ">';
-    echo '<label for="n' . $section->id . '">';
+#    echo '<label for="n' . $section->id . '" style="display:inline-block;bgcolor:red;">';
     echo ' ' . section_tostring($section, $lastindex, $sno);
-    echo '</label>';
+#    echo '</label>';
     echo "</span>\n";
 }
 
@@ -363,19 +357,14 @@ function print_section_reordertool($section, $lastindex, $sno) {
  *       If false, show only section name.
  * @param bool $return If true (default), return the output. If false, print it.
  */
-function section_tostring($section, $lastindex, $sno, $showicon = false,
-        $showsectiontext = true, $return = true) {
+function section_tostring($section, $lastindex, $sno, $showicon = false, $showsectiontext = true, $return = true) {
     global $COURSE;
     $result = '';
     $result .= '<span class="">';
-    if ($section->name == '') {
-        $result .= '<input type="text" name="n' . $section->id .
-                                '" value="Untitled" tabindex="' . ($lastindex + $sno) . '" /></span>';
-    } else {
-        $result .= '<input type="text" name="n' . $section->id .
-                                '" value="' . $section->name .
-                                '" tabindex="' . ($lastindex + $sno) . '" /></span>';
-    }
+    $result .= '<input type="text" name="n' . $section->id .
+            '" placeholder="' . get_string('untitledsection', 'block_quickset') . '" value="' . $section->name .
+            '" tabindex="' . ($lastindex + $sno) . '" /></span>';
+
     if ($return) {
         return $result;
     } else {
@@ -388,7 +377,7 @@ function process_form($courseid, $data) {
     ini_set('display_errors', 1);
     require_once('../../config.php');
     global $CFG, $DB, $COURSE, $USER;
-    require_once($CFG->dirroot.'/lib/accesslib.php');
+    require_once($CFG->dirroot . '/lib/accesslib.php');
 
     $conditions = array('id' => $courseid);
     if (!$course = $DB->get_record('course', $conditions)) {
@@ -431,3 +420,4 @@ function process_form($courseid, $data) {
         }
     }
 }
+
