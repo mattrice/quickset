@@ -30,6 +30,7 @@ div.heading {
     text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
+	vertical-align: middle;
 }
 div.heading:hover{
     overflow: visible;
