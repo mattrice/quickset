@@ -17,7 +17,7 @@
 // This is block_quickset.php - created by Bob Puffer CLAMP, Luther College
 
 
-$string['pluginname'] = 'Quickset';
+$string['pluginname'] = 'Course settings';
 $string['classvisible'] = 'Course visible to students?';
 $string['gradesvisible'] = 'Grades visible to students?';
 $string['sectionsvisible'] = '# of Visible Sections';
@@ -34,3 +34,4 @@ $string['returntocourse'] = 'Discard changes';         #'Return to course, disca
 $string['areyousureremoveselected'] = 'All resources and modules will be moved to the top (0) section.  Summary information will be discarded';
 $string['editingcoursesections'] = 'Editing sections for course: {$a}';
 $string['untitledsection'] = 'Untitled';
+$string['quickset:addinstance'] = 'Add a new Course settings block';
