@@ -45,7 +45,6 @@
                 $course->showgrades = $data->grades;
                 //// Process course availability
                 $course->visible = $data->course;
-                $course->fullname = addslashes($course->fullname);
                 if (!$DB->update_record('course', $course)) {
                     print_error('coursenotupdated');
                 }
