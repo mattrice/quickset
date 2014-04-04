@@ -66,7 +66,7 @@ class block_quickset extends block_base {
 
         $this->content = new stdClass;
 
-        $context = get_context_instance(CONTEXT_COURSE, $COURSE->id);
+        $context = context_course::instance($COURSE->id);
         $students = '';
         $grades = '';
         if (has_capability('moodle/course:update', $context)) {
