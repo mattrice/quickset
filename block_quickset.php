@@ -119,20 +119,20 @@ EOD;
         <div class="setleft {$students}">{$strings['classvisible']}</div>
         <div class="setright">
             <label>
-                <input type="radio" style="margin:0;" name="course" value={$available} {$studentschecked} />
+                <input onChange="this.form.submit();" type="radio" style="margin:0;" name="course" value={$available} {$studentschecked} />
             </label>
             <label>
-                <input type="radio" style="margin:0;" name="course" value={$unavailable} {$studentsunchecked} />
+                <input onChange="this.form.submit();" type="radio" style="margin:0;" name="course" value={$unavailable} {$studentsunchecked} />
             </label>
         </div>
 
         <div class="setleft {$grades}">{$strings['gradesvisible']}</div>
         <div class="setright">
             <label>
-                <input type="radio" style="margin:0;" name="grades" value={$available} {$gradeschecked} />
+                <input onChange="this.form.submit();" type="radio" style="margin:0;" name="grades" value={$available} {$gradeschecked} />
             </label>
             <label>
-                <input type="radio" style="margin:0;" name="grades" value={$unavailable} {$gradesunchecked} />
+                <input onChange="this.form.submit();" type="radio" style="margin:0;" name="grades" value={$unavailable} {$gradesunchecked} />
             </label>
         </div>
 EOD;
@@ -145,7 +145,7 @@ EOD;
 
                 $this->content->text .=
                         '<div class="setright">'
-                        . '<select name="number">';
+                        . '<select name="number" onChange="this.form.submit();">';
 
                 //Get the maximum number of sections from the database
                 if (!$configvalue = $DB->get_record('config_plugins', array('name' => 'maxsections'), 'value')) {
