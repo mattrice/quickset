@@ -20,7 +20,6 @@
 $string['pluginname'] = 'Course settings';
 $string['classvisible'] = 'Course visible to students?';
 $string['gradesvisible'] = 'Grades visible to students?';
-$string['sectionsvisible'] = '# of Visible Sections';
 $string['updatesettings'] = 'Update settings';
 $string['moresettings']='&raquo; Course Settings';
 $string['note'] = 'Note: This block invisible to students';

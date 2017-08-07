@@ -103,7 +103,6 @@ EOD;
                 'no' => get_string('no', 'block_quickset'),
                 'classvisible' => get_string('classvisible', 'block_quickset'),
                 'gradesvisible' => get_string('gradesvisible', 'block_quickset'),
-                'sectionsvisible' => get_string('sectionsvisible', 'block_quickset'),
                 'updatesettings' => get_string('updatesettings', 'block_quickset'),
                 'moresettings' => get_string('moresettings', 'block_quickset'),
                 'note' => get_string('note', 'block_quickset'),
@@ -137,38 +136,6 @@ EOD;
         </div>
 EOD;
 
-            if ($format->uses_sections()) {
-                $this->content->text .= <<<EOD
-
-        <div class="setleft" id="sections"><span class="valign">{$strings['sectionsvisible']}</span></div>
-EOD;
-
-                $this->content->text .=
-                        '<div class="setright">'
-                        . '<select name="number" onChange="this.form.submit();">';
-
-                //Get the maximum number of sections from the database
-                if (!$configvalue = $DB->get_record('config_plugins', array('name' => 'maxsections'), 'value')) {
-                    //If the lookup failed for some reason, use the max of the default number of sections or the current number
-                    $maxsections = max(52, $format_options['numsections']);
-                } else {
-                    $maxsections = $configvalue->value;
-                }
-
-
-                for ($i = 1; $maxsections >= $i; $i++) {
-                    $this->content->text .= '<option value="' . $i . '" ';
-                    if ($format_options['numsections'] == $i) {
-                        $this->content->text .= 'selected';
-                    }
-                    $this->content->text .= '>     ' . $i . '</option>';
-                }
-
-                $this->content->text .=
-                        '</select>'
-                        . '</div>';
-            }
-
             $this->content->text .= <<<EOD
         <div class="submit clearfix">
         <div class="center">
@@ -180,28 +147,6 @@ EOD;
             <a href="{$CFG->wwwroot}/course/edit.php?id={$COURSE->id}">{$strings['moresettings']}</a><br />
 EOD;
 
-            /*
-             * Not yet ready for release - remove the link from the UI
-            //If this course format doesn't use sections, don't bother outputting the link to edit the sections
-            if ($format->uses_sections()) {
-                
-            //Construct moodle_url with hidden params (so that I don't need to use a form and POST data; I can use a regular link instead)
-            $editurl = new moodle_url(
-                    $CFG->wwwroot . '/blocks/quickset/edit.php', array(
-                'courseid' => $COURSE->id,
-                'sesskey' => $sessionkey,
-                'pageurl' => $CFG->wwwroot . '/course/view.php?id=' . $COURSE->id
-                    )
-            );
-                # Link to the Edit sections tool (can be inserted after the More settings link)
-                $this->content->text .=<<<EOD
-                        <a href="{$editurl}">{$strings['editsections']}</a>
-EOD;
-            }
-             * 
-             * 
-             */
-            
             //Close div tag opened above Course Settings link
             $this->content->text .= "        </div>";
 

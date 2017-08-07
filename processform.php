@@ -48,20 +48,7 @@
                     print_error('coursenotupdated');
                 }
             }
-            //// Process number of sections
-            //Get the maximum number of sections from the database
-            if (!$configvalue = $DB->get_record('config_plugins', array('name' => 'maxsections'), 'value')) {
-                //If the lookup failed for some reason, use the default number of sections
-                $maxsections = 52;
-            } else {
-                $maxsections = $configvalue->value;
-            }
-            $numsections = min($data->number, $maxsections);
-            $format = course_get_format($data->courseid);
-            if ($format->uses_sections()) {
-                $formatparams = array('numsections' => $numsections);
-                $format->update_course_format_options($formatparams);
-            }
+
             rebuild_course_cache($courseid, true);
         }
     }
