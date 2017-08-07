@@ -26,16 +26,15 @@
     ini_set('error_reporting', E_ALL);
     ini_set('display_errors', 1);
     require_once('../../config.php');
-    global $CFG, $DB;
+    global $CFG, $PAGE, $DB;
     require_once($CFG->dirroot . '/lib/accesslib.php');
     require_once($CFG->dirroot . '/course/lib.php');
     require_once($CFG->dirroot . '/course/format/lib.php');
     $courseid = required_param('courseid', PARAM_INT);
     $returnurl = $_SERVER['HTTP_REFERER'];
 
-    $context = get_context_instance(CONTEXT_COURSE, $courseid);
     if ($data = data_submitted() and confirm_sesskey()) {
-        $context = get_context_instance(CONTEXT_COURSE, $data->courseid);
+        $context = context_course::instance($data->courseid);
         if (has_capability('moodle/course:update', $context)) {
             $conditions = array('id' => $data->courseid);
             if (!$course = $DB->get_record('course', $conditions)) {
@@ -66,5 +65,8 @@
             rebuild_course_cache($courseid, true);
         }
     }
+
+    // Silence debug output
+    $PAGE->set_url('/');
 
 redirect($returnurl);
