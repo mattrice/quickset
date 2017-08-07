@@ -58,7 +58,7 @@ class block_quickset extends block_base {
      * @return string
      */
     function get_content() {
-        global $CFG, $COURSE, $DB;
+        global $CFG, $COURSE, $OUTPUT;
         //Copy values to variables for outputting
         //heredoc style can't parse constants
         $available = self::AVAILABLE;
@@ -87,8 +87,6 @@ class block_quickset extends block_base {
                 $gradeschecked = '';
             }
 
-            $format = course_get_format($COURSE);
-            $format_options = $format->get_format_options();
             $sessionkey = sesskey();
             $this->content->text = <<<EOD
 <form action="{$CFG->wwwroot}/blocks/quickset/processform.php" method="post">
@@ -150,11 +148,9 @@ EOD;
             //Close div tag opened above Course Settings link
             $this->content->text .= "        </div>";
 
-            $this->content->text .= <<<EOD
-    </div>
-        <div class="small setleft">{$strings['note']}</div>
-        <div class="clearfix"></div>
-EOD;
+            $this->content->text .= '</div>';
+            $this->content->text .= '<div class="center"> ' . $OUTPUT->render_from_template('core/availability_info', [ "classes" => "ishidden", "text" => $strings["note"] ]) . '</div>';
+            $this->content->text .= '<div class="clearfix"></div>';
         }
         //no footer, thanks
         $this->content->footer = '';
